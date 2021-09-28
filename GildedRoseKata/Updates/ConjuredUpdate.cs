@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace GildedRoseKata
+namespace GildedRoseKata.Updates
 {
-    public class NormalUpdate : IUpdate
+    public class ConjuredUpdate : IUpdate
     {
         public int UpdateQuality(int quality, int sellIn)
         {
-            var qualityReduction = sellIn > 0 ? 1 : 2;
+            var qualityReduction = sellIn > 0 ? 2 : 4;
             return Math.Max(quality - qualityReduction, 0);
         }
         

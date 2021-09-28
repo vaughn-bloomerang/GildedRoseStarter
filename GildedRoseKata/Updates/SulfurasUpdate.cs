@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GildedRoseKata
+﻿namespace GildedRoseKata.Updates
 {
     public class SulfurasUpdate : IUpdate
     {

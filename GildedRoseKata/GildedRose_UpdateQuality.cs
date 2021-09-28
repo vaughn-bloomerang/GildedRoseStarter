@@ -10,12 +10,13 @@ namespace GildedRoseKata
     /// Test naming convention recommendation:
     /// https://ardalis.com/unit-test-naming-convention/
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class GildedRose_UpdateQuality
     {
         [Fact]
         public void DoesNothingGivenSulfuras()
         {
-            var initialQuality = 80;
+            const int initialQuality = 80;
             var items = new List<Item> {
                 new() { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = initialQuality }
             };
@@ -39,7 +40,7 @@ namespace GildedRoseKata
         [Fact]
         public void QualityDropsGivenConjured()
         {
-            var initialQuality = 50;
+            const int initialQuality = 50;
             var items = new List<Item> {
                 new() { Name = "Conjured Mana Cake", SellIn = 10, Quality = initialQuality }
             };
@@ -53,9 +54,41 @@ namespace GildedRoseKata
         }
         
         [Fact]
+        public void QualityDropsGivenNormal()
+        {
+            const int initialQuality = 50;
+            var items = new List<Item> {
+                new() { Name = "+5 Dexterity Vest", SellIn = 10, Quality = initialQuality }
+            };
+            var gildedRose = new GildedRose(items);
+
+            gildedRose.UpdateQuality();
+
+            var firstItem = items.First();
+
+            Assert.Equal(initialQuality - 1, firstItem.Quality);
+        }
+        
+        [Fact]
+        public void QualityDropsFasterGivenNormalPastSellIn()
+        {
+            const int initialQuality = 50;
+            var items = new List<Item> {
+                new() { Name = "+5 Dexterity Vest", SellIn = 0, Quality = initialQuality }
+            };
+            var gildedRose = new GildedRose(items);
+
+            gildedRose.UpdateQuality();
+
+            var firstItem = items.First();
+
+            Assert.Equal(initialQuality - 2, firstItem.Quality);
+        }
+        
+        [Fact]
         public void QualityDropsFasterGivenConjuredPastSellIn()
         {
-            var initialQuality = 50;
+            const int initialQuality = 50;
             var items = new List<Item> {
                 new() { Name = "Conjured Mana Cake", SellIn = -5, Quality = initialQuality }
             };
@@ -69,11 +102,11 @@ namespace GildedRoseKata
         }
         
         [Fact]
-        public void YayGivenConjured()
+        public void QualityDoesNotDropGivenZeroQuality()
         {
-            var initialQuality = 80;
+            const int initialQuality = 0;
             var items = new List<Item> {
-                new() { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = initialQuality }
+                new() { Name = "Conjured Mana Cake", SellIn = 10, Quality = initialQuality }
             };
             var gildedRose = new GildedRose(items);
 
@@ -81,15 +114,55 @@ namespace GildedRoseKata
 
             var firstItem = items.First();
 
-            // Use your preferred assertion library (already included - pick one delete others)
-            // xunit default
             Assert.Equal(initialQuality, firstItem.Quality);
+        }
+        
+        [Fact]
+        public void QualityDoesNotRiseGivenBrieAtFiftyQuality()
+        {
+            const int initialQuality = 50;
+            var items = new List<Item> {
+                new() { Name = "Aged Brie", SellIn = 10, Quality = initialQuality }
+            };
+            var gildedRose = new GildedRose(items);
 
-            // fluentassertions
-            firstItem.Quality.Should().Be(initialQuality);
+            gildedRose.UpdateQuality();
 
-            // shouldly
-            firstItem.Quality.ShouldBe(initialQuality);
+            var firstItem = items.First();
+
+            Assert.Equal(initialQuality, firstItem.Quality);
+        }
+        
+        [Fact]
+        public void QualityRisesGivenBrie()
+        {
+            const int initialQuality = 30;
+            var items = new List<Item> {
+                new() { Name = "Aged Brie", SellIn = 10, Quality = initialQuality }
+            };
+            var gildedRose = new GildedRose(items);
+
+            gildedRose.UpdateQuality();
+
+            var firstItem = items.First();
+
+            Assert.Equal(initialQuality + 1, firstItem.Quality);
+        }
+        
+        [Fact]
+        public void QualityRisesFasterGivenBriePastSellIn()
+        {
+            const int initialQuality = 30;
+            var items = new List<Item> {
+                new() { Name = "Aged Brie", SellIn = 0, Quality = initialQuality }
+            };
+            var gildedRose = new GildedRose(items);
+
+            gildedRose.UpdateQuality();
+
+            var firstItem = items.First();
+
+            Assert.Equal(initialQuality + 2, firstItem.Quality);
         }
     }
 }

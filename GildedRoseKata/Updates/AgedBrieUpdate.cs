@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GildedRoseKata
+namespace GildedRoseKata.Updates
 {
     public class AgedBrieUpdate : IUpdate
     {
